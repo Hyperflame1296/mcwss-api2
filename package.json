@@ -1,0 +1,26 @@
+{
+  "name": "mcwss-api2",
+  "version": "0.5.0-alpha.rev0",
+  "description": "new version of the mcwss-api wrapper!",
+  "keywords": [
+    "minecraft",
+    "api",
+    "ws",
+    "websocket"
+  ],
+  "homepage": "https://github.com/Hyperflame1296/mcwss-api2#readme",
+  "bugs": {
+    "url": "https://github.com/Hyperflame1296/mcwss-api2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hyperflame1296/mcwss-api2.git"
+  },
+  "license": "ISC",
+  "author": "TensiveYT",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node test.js"
+  }
+}
