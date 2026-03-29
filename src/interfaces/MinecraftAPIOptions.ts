@@ -1,4 +1,4 @@
-export interface APIOptions {
+export interface MinecraftAPIOptions {
     /**
      * Logging options.
      */

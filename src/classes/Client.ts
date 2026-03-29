@@ -8,8 +8,15 @@ import crypto from 'node:crypto'
 
 // import: local interfaces
 import { CommandOptions } from '../interfaces/CommandOptions.js'
-import { MessageResponse } from '../interfaces/events/MessageResponse.js'
-import { APIInstance } from '../index.js'
+import { EventType } from '../types/events/EventType.js'
+import { MinecraftAPIInstance } from './MinecraftAPIInstance.js'
+import { EventMap } from '../interfaces/events/EventMap.js'
+import { EntityType } from '../interfaces/world/EntityType.js'
+import { BlockType } from '../interfaces/world/BlockType.js'
+import { ItemType } from '../interfaces/world/ItemType.js'
+
+/* import: local types */
+import { EventOf } from '../types/events/EventOf.js'
 
 // code
 export class Client extends EventEmitter {
@@ -20,8 +27,8 @@ export class Client extends EventEmitter {
     /**
      * Internal API reference.
      */
-    api: APIInstance
-    constructor(ws: WebSocket, api: APIInstance) {
+    api: MinecraftAPIInstance
+    constructor(ws: WebSocket, api: MinecraftAPIInstance) {
         super()
         this.ws = ws
         this.api = api
@@ -35,11 +42,19 @@ export class Client extends EventEmitter {
             }
         })
     }
+    on<T extends keyof EventMap>(eventName: T, listener: (msg: EventOf<T>) => void): this
+    on(eventName: string, listener: (...args: any[]) => void): this {
+        return super.on(eventName, listener)
+    }
+    off<T extends keyof EventMap>(eventName: T, listener: (msg: EventOf<T>) => void): this
+    off(eventName: string, listener: (...args: any[]) => void): this {
+        return super.off(eventName, listener)
+    }
     /**
      * Subscribe to an event. This will allow listeners for this event.
      * @param event The event to subscribe to.
      */
-    subscribe(event: keyof MessageResponse) {
+    subscribe(event: EventType) {
         // check if our WS is open
         if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return
 
@@ -60,7 +75,7 @@ export class Client extends EventEmitter {
      * Unsubscribe from an event. Listeners for this event will be disabled.
      * @param event The event to unsubscribe from.
      */
-    unsubscribe(event: keyof MessageResponse) {
+    unsubscribe(event: EventType) {
         // check if our WS is open
         if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return
 
@@ -153,7 +168,7 @@ export class Client extends EventEmitter {
      * Get the data for all entities supported by this client.
      * @param {CommandOptions} options The options for this command request.
      */
-    getMobData(options?: CommandOptions) {
+    getAllEntityTypes(options?: CommandOptions): Promise<EntityType[]> {
         return new Promise((resolve, reject) => {
             try {
                 // Generate a random UUID. This is used to identify responses to the request later.
@@ -166,6 +181,100 @@ export class Client extends EventEmitter {
                         // currently looking at v1's code bc i forgot how it works
                         version: options?.commandVersion,
                         messagePurpose: 'data:mob',
+                        requestId
+                    },
+                }))
+
+                // make a handler for the message and recieve it
+                let handler = (e: WebSocket.RawData) => {
+                    // decode the message's data
+                    let message = JSON.parse(this.api.decoder.decode(e as Buffer))
+
+                    // check if the UUID is the same as the oen given
+                    if (message.header.requestId === requestId) {
+                        // check to see if the message is an error message
+                        if (message.body.statusCode < 0 && this.api.options.logging?.commandError)
+                            console.error(this.api.tags.error + `${color.whiteBright(message.body.statusMessage) ?? 'A command response error has been sent.'} | ${color.yellowBright(message.body.statusCode.toString())}`)
+                        
+                        // remove listener
+                        this.ws.off('message', handler)
+
+                        // resolve the Promise
+                        resolve(message.body)
+                    }
+                }
+
+                // create listener
+                this.ws.on('message', handler)
+            } catch (err) {
+                reject(this.api.tags.error + `\'Client.${this.runCommandAsync.name}()\' - ${color.whiteBright(err.message)}\n${err.stack}`)
+            }
+        })
+    }
+    /**
+     * Get the data for all blocks supported by this client.
+     * @param {CommandOptions} options The options for this command request.
+     */
+    getAllBlockTypes(options?: CommandOptions): Promise<BlockType> {
+        return new Promise((resolve, reject) => {
+            try {
+                // Generate a random UUID. This is used to identify responses to the request later.
+
+                let requestId = crypto.randomUUID({ disableEntropyCache: true })
+
+                // Send our message with the UUID
+                this.ws.send(JSON.stringify({
+                    header: {
+                        // currently looking at v1's code bc i forgot how it works
+                        version: options?.commandVersion,
+                        messagePurpose: 'data:block',
+                        requestId
+                    },
+                }))
+
+                // make a handler for the message and recieve it
+                let handler = (e: WebSocket.RawData) => {
+                    // decode the message's data
+                    let message = JSON.parse(this.api.decoder.decode(e as Buffer))
+
+                    // check if the UUID is the same as the oen given
+                    if (message.header.requestId === requestId) {
+                        // check to see if the message is an error message
+                        if (message.body.statusCode < 0 && this.api.options.logging?.commandError)
+                            console.error(this.api.tags.error + `${color.whiteBright(message.body.statusMessage) ?? 'A command response error has been sent.'} | ${color.yellowBright(message.body.statusCode.toString())}`)
+                        
+                        // remove listener
+                        this.ws.off('message', handler)
+
+                        // resolve the Promise
+                        resolve(message.body)
+                    }
+                }
+
+                // create listener
+                this.ws.on('message', handler)
+            } catch (err) {
+                reject(this.api.tags.error + `\'Client.${this.runCommandAsync.name}()\' - ${color.whiteBright(err.message)}\n${err.stack}`)
+            }
+        })
+    }
+    /**
+     * Get the data for all items supported by this client.
+     * @param {CommandOptions} options The options for this command request.
+     */
+    getAllItemTypes(options?: CommandOptions): Promise<ItemType[]> {
+        return new Promise((resolve, reject) => {
+            try {
+                // Generate a random UUID. This is used to identify responses to the request later.
+
+                let requestId = crypto.randomUUID({ disableEntropyCache: true })
+
+                // Send our message with the UUID
+                this.ws.send(JSON.stringify({
+                    header: {
+                        // currently looking at v1's code bc i forgot how it works
+                        version: options?.commandVersion,
+                        messagePurpose: 'data:item',
                         requestId
                     },
                 }))

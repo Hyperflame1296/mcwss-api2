@@ -1,3 +1,3 @@
-// declaration
+/* declaration */
 export type CommandOriginType =
     'player'

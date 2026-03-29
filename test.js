@@ -1,5 +1,5 @@
-import { APIInstance } from './dist/index.js'
-let api = new APIInstance()
+import { MinecraftAPIInstance } from './dist/index.js'
+let api = new MinecraftAPIInstance()
 
 api.start(4000, '127.0.0.1', {
     commandVersion: 1,
@@ -12,9 +12,6 @@ api.start(4000, '127.0.0.1', {
 })
 api.wss.on('connection', async stream => {
     let client = api.clients[0]
-    client.subscribe('PlayerTeleported')
-
-    client.on('PlayerTeleported', e => {
-        console.log(e)
-    })
+    client.subscribe('PlayerBounced')
+    console.log(await client.getAllItemTypes())
 })
