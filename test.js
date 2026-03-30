@@ -12,6 +12,8 @@ api.start(4000, '127.0.0.1', {
 })
 api.wss.on('connection', async stream => {
     let client = api.clients[0]
-    client.subscribe('PlayerBounced')
-    console.log(await client.getAllItemTypes())
+    client.subscribe('ItemInteracted')
+    client.on('ItemInteracted', e => {
+        
+    })
 })

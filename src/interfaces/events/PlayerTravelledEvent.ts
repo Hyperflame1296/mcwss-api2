@@ -1,11 +1,15 @@
 /* import: local interfaces */
-import { Entity } from '../world/Entity.js'
-import { Player } from '../world/Player.js'
+import { Entity } from '../world/entity/Entity.js'
+import { Player } from '../world/player/Player.js'
 
 /* import: local enumerators */
-import { PlayerTravelMethod } from '../../enums/world/PlayerTravelMethod.js'
+import { PlayerTravelMethod } from '../../enums/world/player/PlayerTravelMethod.js'
 
 /* declaration */
+/**
+ * Fires whenever the player sends a message.  
+ * - *This event will not be recieved from other players.*
+ */
 export interface PlayerTravelledEvent {
     /**
      * Whether this player is underwater or not.

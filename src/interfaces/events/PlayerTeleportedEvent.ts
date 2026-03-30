@@ -1,10 +1,14 @@
 /* import: local enumerators */
-import { PlayerTeleportCause } from '../../enums/world/PlayerTeleportCause.js'
+import { PlayerTeleportCause } from '../../enums/world/player/PlayerTeleportCause.js'
 
 /* import: local interfaces */
-import { Player } from '../world/Player.js'
+import { Player } from '../world/player/Player.js'
 
 /* declaration */
+/**
+ * Fires whenever the player teleports.
+ * - *This event will not be recieved from other players.*
+ */
 export interface PlayerTeleportedEvent {
     /**
      * The cause of this player being teleported.

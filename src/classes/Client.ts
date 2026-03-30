@@ -11,12 +11,9 @@ import { CommandOptions } from '../interfaces/CommandOptions.js'
 import { EventType } from '../types/events/EventType.js'
 import { MinecraftAPIInstance } from './MinecraftAPIInstance.js'
 import { EventMap } from '../interfaces/events/EventMap.js'
-import { EntityType } from '../interfaces/world/EntityType.js'
-import { BlockType } from '../interfaces/world/BlockType.js'
-import { ItemType } from '../interfaces/world/ItemType.js'
-
-/* import: local types */
-import { EventOf } from '../types/events/EventOf.js'
+import { EntityType } from '../interfaces/world/entity/EntityType.js'
+import { BlockType } from '../interfaces/world/block/BlockType.js'
+import { ItemType } from '../interfaces/world/item/ItemType.js'
 
 // code
 export class Client extends EventEmitter {
@@ -42,11 +39,11 @@ export class Client extends EventEmitter {
             }
         })
     }
-    on<T extends keyof EventMap>(eventName: T, listener: (msg: EventOf<T>) => void): this
+    on<T extends keyof EventMap>(eventName: T, listener: (msg: EventMap[T]) => void): this
     on(eventName: string, listener: (...args: any[]) => void): this {
         return super.on(eventName, listener)
     }
-    off<T extends keyof EventMap>(eventName: T, listener: (msg: EventOf<T>) => void): this
+    off<T extends keyof EventMap>(eventName: T, listener: (msg: EventMap[T]) => void): this
     off(eventName: string, listener: (...args: any[]) => void): this {
         return super.off(eventName, listener)
     }

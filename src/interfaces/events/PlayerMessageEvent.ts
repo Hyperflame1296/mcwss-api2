@@ -2,6 +2,10 @@
 import { PlayerMessageType } from '../../types/PlayerMessageType.js'
 
 /* declaration */
+/**
+ * Fires whenever the player sends a message.  
+ * - *This event will only be recieved from other players if you are the host of the world.*
+ */
 export interface PlayerMessageEvent {
     /**
      * The message that has been sent.

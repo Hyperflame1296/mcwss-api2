@@ -1,10 +1,13 @@
 /* import: local interfaces */
-import { PlayerDiedEvent       } from './PlayerDiedEvent.js'
 import { PlayerMessageEvent    } from './PlayerMessageEvent.js'
-import { PlayerTeleportedEvent } from './PlayerTeleportedEvent.js'
-import { PlayerTransformEvent  } from './PlayerTransformEvent.js'
 import { PlayerTravelledEvent  } from './PlayerTravelledEvent.js'
+import { PlayerTransformEvent  } from './PlayerTransformEvent.js'
+import { PlayerTeleportedEvent } from './PlayerTeleportedEvent.js'
+import { PlayerDiedEvent       } from './PlayerDiedEvent.js'
 import { PlayerBouncedEvent    } from './PlayerBouncedEvent.js'
+import { EntitySpawnedEvent    } from './EntitySpawnedEvent.js'
+import { ItemUsedEvent         } from './ItemUsedEvent.js'
+import { ItemInteractedEvent   } from './ItemInteractedEvent.js'
 
 /* declaration */
 export interface EventMap {
@@ -14,4 +17,7 @@ export interface EventMap {
     PlayerTeleported: PlayerTeleportedEvent
     PlayerDied      : PlayerDiedEvent
     PlayerBounced   : PlayerBouncedEvent
+    EntitySpawned   : EntitySpawnedEvent
+    ItemUsed        : ItemUsedEvent
+    ItemInteracted  : ItemInteractedEvent
 }

@@ -1,8 +1,8 @@
 // import: local interfaces
-import { Vector3 } from '../math/Vector3.js'
+import { Vector3 } from '../../math/Vector3.js'
 
 /* import: local enumerators */
-import { DimensionType } from '../../enums/world/DimensionType.js'
+import { DimensionType } from '../../../enums/world/DimensionType.js'
 
 /* declaration */
 export interface Entity {

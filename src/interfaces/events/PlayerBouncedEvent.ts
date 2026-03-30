@@ -1,14 +1,18 @@
 /* import: local interfaces */
-import { Block } from '../world/Block.js'
-import { Player } from '../world/Player.js'
+import { GameObjectType } from '../world/GameObjectType.js'
+import { Player } from '../world/player/Player.js'
 
 
 /* declaration */
+/**
+ * Fires whenever the player bounces. (e.g. on a Slime Block)
+ * - *This has not yet been verified to be recieved from other players.*
+ */
 export interface PlayerBouncedEvent {
     /**
      * The type of the block that this player has bounced on.
      */
-    block: Block
+    block: GameObjectType
     /**
      * How high this player has bounced.
      */
